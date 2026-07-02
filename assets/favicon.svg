@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="OCH 마이크 아이콘">
   <rect width="64" height="64" rx="18" fill="#0b0908"/>
-  <g font-family="Arial, Helvetica, sans-serif" font-weight="800" text-anchor="middle" dominant-baseline="middle">
-    <text x="32" y="18" fill="#f4e5cf" font-size="24">O</text>
-    <text x="32" y="35" fill="#bd843c" font-size="28" transform="rotate(270 32 35)">C</text>
-    <text x="32" y="50" fill="#bd843c" font-size="20" transform="rotate(90 32 50)">H</text>
-  </g>
+  <ellipse cx="32" cy="25" rx="12.8" ry="16" fill="none" stroke="#f4e5cf" stroke-width="4"/>
+  <path d="M14 37c1.5 8.2 8.2 12.5 18 12.5S48.5 45.2 50 37" fill="none" stroke="#bd843c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M22 48.5h20" fill="none" stroke="#bd843c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M32 48.5v9" fill="none" stroke="#bd843c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M22 57.5h20" fill="none" stroke="#bd843c" stroke-width="4" stroke-linecap="round"/>
 </svg>
