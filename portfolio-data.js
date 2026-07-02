@@ -1,27 +1,13 @@
-// YouTube 레퍼런스 영상은 이 파일만 수정해서 관리합니다.
-// - title: 카드 제목
-// - description: 카드 설명
-// - youtubeUrl: YouTube 영상 링크
-// YouTube 썸네일은 자동으로 커버 이미지처럼 표시됩니다.
+// Google Sheet를 "웹에 게시"한 CSV URL을 넣으면 시트 내용을 불러옵니다.
+// 비워두면 코드에 있는 기본 데이터를 사용합니다.
+window.GOOGLE_SHEET_VIDEO_CSV_URL = "https://docs.google.com/spreadsheets/d/1F1mobGe9E0OCLrnz0MBO2_eYFL8ONYteo9oY_laQOn0/gviz/tq?tqx=out:csv&sheet=videos";
+window.GOOGLE_SHEET_SONG_CSV_URL = "https://docs.google.com/spreadsheets/d/1F1mobGe9E0OCLrnz0MBO2_eYFL8ONYteo9oY_laQOn0/gviz/tq?tqx=out:csv&sheet=songs";
+window.GOOGLE_SHEET_REVIEW_CSV_URL = "https://docs.google.com/spreadsheets/d/1F1mobGe9E0OCLrnz0MBO2_eYFL8ONYteo9oY_laQOn0/gviz/tq?tqx=out:csv&sheet=reviews";
+
+// Google Sheet를 연결하기 전까지 사용할 기본 YouTube 링크입니다.
 window.REFERENCE_VIDEOS = [
-  {
-    title: "축가 라이브 01",
-    description: "예식 분위기에 맞춘 안정적인 라이브를 확인할 수 있습니다.",
-    youtubeUrl: "https://www.youtube.com/watch?v=bxSqYRMq_9g",
-  },
-  {
-    title: "축가 라이브 02",
-    description: "실제 라이브 톤과 곡 분위기를 확인할 수 있습니다.",
-    youtubeUrl: "https://www.youtube.com/watch?v=dvF5I-faSH4",
-  },
-  {
-    title: "축가 라이브 03",
-    description: "예식 분위기에 맞춘 안정적인 라이브를 확인할 수 있습니다.",
-    youtubeUrl: "https://www.youtube.com/watch?v=157RdAksOpo",
-  },
-  {
-    title: "축가 라이브 04",
-    description: "예식 분위기에 맞춘 안정적인 라이브를 확인할 수 있습니다.",
-    youtubeUrl: "https://www.youtube.com/watch?v=rzfnO0hF67w",
-  },
+  "https://www.youtube.com/watch?v=bxSqYRMq_9g",
+  "https://www.youtube.com/watch?v=dvF5I-faSH4",
+  "https://www.youtube.com/watch?v=157RdAksOpo",
+  "https://www.youtube.com/watch?v=rzfnO0hF67w",
 ];

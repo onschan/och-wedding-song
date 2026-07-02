@@ -179,6 +179,77 @@ function getYouTubeEmbedUrl(url) {
   return `https://www.youtube-nocookie.com/embed/${youtubeId}`;
 }
 
+function extractYouTubeUrls(value) {
+  const matches = String(value || "").match(/https?:\/\/[^\s"',<>]+/g) || [];
+  const seen = new Set();
+  return matches.filter((url) => {
+    if (!getYouTubeId(url) || seen.has(url)) return false;
+    seen.add(url);
+    return true;
+  });
+}
+
+function parseCsvRows(csv) {
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let index = 0; index < csv.length; index += 1) {
+    const char = csv[index];
+    const next = csv[index + 1];
+
+    if (char === '"' && quoted && next === '"') {
+      cell += '"';
+      index += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === "," && !quoted) {
+      row.push(cell.trim());
+      cell = "";
+    } else if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && next === "\n") index += 1;
+      row.push(cell.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+
+  row.push(cell.trim());
+  if (row.some(Boolean)) rows.push(row);
+  return rows;
+}
+
+async function fetchCsvRows(url) {
+  const fetchUrl = new URL(url);
+  if (fetchUrl.protocol === "http:" || fetchUrl.protocol === "https:") {
+    fetchUrl.searchParams.set("_", String(Date.now()));
+  }
+  const response = await fetch(fetchUrl.toString(), { cache: "no-store" });
+  if (!response.ok) throw new Error(`Google Sheet 응답 오류: ${response.status}`);
+  return parseCsvRows(await response.text());
+}
+
+function removeHeaderRow(rows, headers) {
+  if (!rows.length) return rows;
+  const firstRow = rows[0].map((cell) => cell.toLowerCase().replace(/\s/g, ""));
+  const hasHeader = headers.some((header) => firstRow.includes(header));
+  return hasHeader ? rows.slice(1) : rows;
+}
+
+function createReferenceVideo(url, index) {
+  return {
+    title: `축가 라이브 ${String(index + 1).padStart(2, "0")}`,
+    song: "실제 라이브",
+    body: "",
+    videoUrl: url,
+    embedUrl: getYouTubeEmbedUrl(url),
+  };
+}
+
 function resolvePortfolioImage(item) {
   if (item.image) return item.image;
   const youtubeId = getYouTubeId(item.videoUrl || item.youtubeUrl);
@@ -186,17 +257,81 @@ function resolvePortfolioImage(item) {
   return "";
 }
 
-function getReferenceVideos() {
+function getFallbackReferenceVideos() {
   if (!Array.isArray(window.REFERENCE_VIDEOS)) return [];
   return window.REFERENCE_VIDEOS
-    .map((item) => ({
-      title: String(item.title || "").trim(),
-      song: "실제 라이브",
-      body: String(item.description || "").trim(),
-      videoUrl: String(item.youtubeUrl || "").trim(),
-      embedUrl: getYouTubeEmbedUrl(item.youtubeUrl),
-    }))
+    .map((item, index) => {
+      const videoUrl = typeof item === "string" ? item : item?.youtubeUrl;
+      return createReferenceVideo(String(videoUrl || "").trim(), index);
+    })
     .filter((item) => item.title && item.videoUrl && item.embedUrl);
+}
+
+async function getReferenceVideos() {
+  const sheetUrl = String(
+    window.GOOGLE_SHEET_VIDEO_CSV_URL || window.GOOGLE_SHEET_CSV_URL || "",
+  ).trim();
+  if (!sheetUrl) return getFallbackReferenceVideos();
+
+  try {
+    const rows = await fetchCsvRows(sheetUrl);
+    const urls = extractYouTubeUrls(rows.flat().join("\n"));
+    if (!urls.length) return getFallbackReferenceVideos();
+    return urls.map(createReferenceVideo).filter((item) => item.embedUrl);
+  } catch (error) {
+    console.warn("Google Sheet 영상 목록을 불러오지 못했습니다.", error);
+    return getFallbackReferenceVideos();
+  }
+}
+
+async function getSongs() {
+  const sheetUrl = String(window.GOOGLE_SHEET_SONG_CSV_URL || "").trim();
+  if (!sheetUrl) return SONGS;
+
+  try {
+    const rows = removeHeaderRow(await fetchCsvRows(sheetUrl), [
+      "artist",
+      "title",
+      "가수",
+      "곡명",
+      "노래",
+    ]);
+    const songs = rows
+      .map(([artist, title]) => ({
+        artist: String(artist || "").trim(),
+        title: String(title || "").trim(),
+      }))
+      .filter((song) => song.artist && song.title);
+    return songs.length ? songs : SONGS;
+  } catch (error) {
+    console.warn("Google Sheet 추천 축가 목록을 불러오지 못했습니다.", error);
+    return SONGS;
+  }
+}
+
+async function getReviews() {
+  const sheetUrl = String(window.GOOGLE_SHEET_REVIEW_CSV_URL || "").trim();
+  if (!sheetUrl) return REVIEWS;
+
+  try {
+    const rows = removeHeaderRow(await fetchCsvRows(sheetUrl), [
+      "name",
+      "quote",
+      "이름",
+      "후기",
+      "리뷰",
+    ]);
+    const reviews = rows
+      .map(([name, quote]) => ({
+        name: String(name || "").trim(),
+        quote: String(quote || "").trim(),
+      }))
+      .filter((review) => review.name && review.quote);
+    return reviews.length ? reviews : REVIEWS;
+  } catch (error) {
+    console.warn("Google Sheet 후기 목록을 불러오지 못했습니다.", error);
+    return REVIEWS;
+  }
 }
 
 function renderList(selector, items, template) {
@@ -205,7 +340,13 @@ function renderList(selector, items, template) {
   root.innerHTML = items.map(template).join("");
 }
 
-function renderContent() {
+async function renderContent() {
+  const [referenceVideos, songs, reviews] = await Promise.all([
+    getReferenceVideos(),
+    getSongs(),
+    getReviews(),
+  ]);
+
   renderList(
     "#trustGrid",
     TRUST_POINTS,
@@ -241,7 +382,7 @@ function renderContent() {
 
   renderList(
     "#referenceVideoGrid",
-    getReferenceVideos(),
+    referenceVideos,
     (item, index) => `
       <article class="youtube-card fade-target ${index >= INITIAL_VIDEO_COUNT ? "is-collapsed" : ""}">
         <div class="youtube-frame">
@@ -259,7 +400,7 @@ function renderContent() {
 
   renderList(
     "#songList",
-    SONGS,
+    songs,
     (song) => `
       <li class="song-item fade-target">
         <span class="song-artist">${escapeHtml(song.artist)}</span>
@@ -272,7 +413,7 @@ function renderContent() {
 
   renderList(
     "#reviewGrid",
-    REVIEWS,
+    reviews,
     (item) => `
       <article class="review-card fade-target">
         <div class="review-card-head">
@@ -494,8 +635,8 @@ function setupStickyHeader() {
   window.addEventListener("scroll", update, { passive: true });
 }
 
-function init() {
-  renderContent();
+async function init() {
+  await renderContent();
   bindForm();
   bindGalleryToggle();
   bindReviewCarousel();
