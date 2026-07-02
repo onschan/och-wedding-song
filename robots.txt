@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://onschan.github.io/oh-changhyun-wedding-song/sitemap.xml
