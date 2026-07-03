@@ -477,7 +477,9 @@ function setMailFallbackMessage() {
   if (!messageNode) return;
   messageNode.textContent = "";
   messageNode.classList.remove("error");
-  messageNode.append("일부 앱에서는 메일 앱이 열리지 않을 수 있습니다. 열리지 않으면 ");
+  messageNode.append("일부 앱에서는 메일 앱이 열리지 않을 수 있습니다.");
+  messageNode.append(document.createElement("br"));
+  messageNode.append("열리지 않으면 ");
 
   const emailLink = document.createElement("a");
   emailLink.href = `mailto:${SITE_CONFIG.email}`;
