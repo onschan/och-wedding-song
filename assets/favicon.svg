@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="OCH 마이크 아이콘">
   <rect width="64" height="64" rx="18" fill="#0b0908"/>
-  <ellipse cx="32" cy="26.5" rx="12.8" ry="16" fill="none" stroke="#f4e5cf" stroke-width="4"/>
-  <path d="M14 36c1.5 8.2 8.2 12.5 18 12.5S48.5 45.2 50 37" fill="none" stroke="#bd843c" stroke-width="4" stroke-linecap="round"/>
-  <path d="M22 47.5h20" fill="none" stroke="#d2a15a" stroke-width="4" stroke-linecap="round"/>
-  <path d="M32 47.5v9" fill="none" stroke="#d2a15a" stroke-width="4" stroke-linecap="round"/>
-  <path d="M22 56.5h20" fill="none" stroke="#d2a15a" stroke-width="4" stroke-linecap="round"/>
+  <ellipse cx="32" cy="23.5" rx="12.8" ry="16" fill="none" stroke="#f4e5cf" stroke-width="4"/>
+  <path d="M14 33c1.5 8.2 8.2 12.5 18 12.5S48.5 45.2 50 37" fill="none" stroke="#bd843c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M22 49h20" fill="none" stroke="#9e6a2f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M32 49v9" fill="none" stroke="#9e6a2f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M22 58h20" fill="none" stroke="#9e6a2f" stroke-width="4" stroke-linecap="round"/>
 </svg>
