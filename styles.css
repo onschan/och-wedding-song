@@ -345,6 +345,7 @@ textarea {
   font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
+  text-decoration: none;
   transition:
     transform 180ms ease,
     border-color 180ms ease,
@@ -1285,6 +1286,12 @@ textarea:focus {
   margin: 13px 0 0;
   color: var(--gold-deep);
   font-weight: 600;
+}
+
+.form-message a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .form-message.error {

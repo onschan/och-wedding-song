@@ -8,6 +8,7 @@ const SITE_CONFIG = {
   instagramLabel: "@_din.oh",
   instagramUrl: "https://www.instagram.com/_din.oh?igsh=NHdjZXNqMWU4Nm5i",
   email: "och0615@naver.com",
+  kakaoTalk: "och0615",
   phone: "010-0000-0000", // TODO: 실제 연락처로 교체하세요.
 };
 
@@ -445,16 +446,20 @@ function getFormValues(form) {
 }
 
 function buildMailtoUrl(values) {
-  const subject = `[축가 문의] ${values.name}님 / ${values.inquiryType}`;
+  const inquiryType = values.inquiryType || "축가 문의";
+  const name = values.name || "상담 문의";
+  const phone = values.phone || "";
+  const message = values.message || "";
+  const subject = `[축가 문의] ${name} / ${inquiryType}`;
   const body = [
-    "축가 상담 문의가 접수되었습니다.",
+    "축가 상담 문의드립니다.",
     "",
-    `문의 유형: ${values.inquiryType}`,
-    `이름: ${values.name}`,
-    `연락처: ${values.phone}`,
+    `문의 유형: ${inquiryType}`,
+    `이름: ${name}`,
+    `연락처: ${phone}`,
     "",
     "문의 내용:",
-    values.message,
+    message,
   ].join("\n");
 
   return `mailto:${SITE_CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -467,27 +472,46 @@ function setMessage(message, type = "success") {
   messageNode.classList.toggle("error", type === "error");
 }
 
+function setMailFallbackMessage() {
+  const messageNode = $("#formMessage");
+  if (!messageNode) return;
+  messageNode.textContent = "";
+  messageNode.classList.remove("error");
+  messageNode.append("일부 앱에서는 메일 앱이 열리지 않을 수 있습니다. 열리지 않으면 ");
+
+  const emailLink = document.createElement("a");
+  emailLink.href = `mailto:${SITE_CONFIG.email}`;
+  emailLink.textContent = SITE_CONFIG.email;
+  messageNode.append(emailLink, ` 또는 카카오톡 ${SITE_CONFIG.kakaoTalk}으로 문의 주세요.`);
+}
+
 function bindForm() {
   const form = $("#inquiryForm");
   if (!form) return;
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const values = getFormValues(form);
+  const mailLink = $("#mailSubmit");
+  if (!mailLink) return;
 
-    const submitButton = form.querySelector(".form-submit");
-    submitButton.disabled = true;
-    submitButton.textContent = "메일 앱을 여는 중...";
-    setMessage("입력 내용을 이메일 본문으로 정리하고 있습니다.");
+  const updateMailLink = () => {
+    mailLink.href = buildMailtoUrl(getFormValues(form));
+  };
 
-    // TODO: 실제 운영에서는 이 지점을 Formspree, Google Form, 자체 API 전송 로직으로 교체할 수 있습니다.
-    window.location.href = buildMailtoUrl(values);
+  form.addEventListener("input", updateMailLink);
+  form.addEventListener("change", updateMailLink);
+  updateMailLink();
+
+  mailLink.addEventListener("click", () => {
+    updateMailLink();
+    setMessage("메일 앱을 여는 중입니다.");
 
     window.setTimeout(() => {
-      submitButton.disabled = false;
-      submitButton.textContent = "문의 메일 작성하기";
-      setMessage("메일 앱이 열리지 않았다면 이메일 주소와 브라우저 설정을 확인해주세요.");
+      setMailFallbackMessage();
     }, 900);
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    mailLink.click();
   });
 }
 
