@@ -12,6 +12,11 @@ const SITE_CONFIG = {
   phone: "010-0000-0000", // TODO: 실제 연락처로 교체하세요.
 };
 
+const EXTERNAL_PROFILE_URLS = {
+  soomgo: "https://soomgo.com/profile/users/7832842?from=portfolio_detail",
+  kmong: "https://kmong.com/gig/765135",
+};
+
 const TRUST_POINTS = [
   {
     title: "진심 어린 마음",
@@ -553,6 +558,18 @@ function bindForm() {
   });
 }
 
+function bindExternalProfileLinks() {
+  document.querySelectorAll("[data-external-profile]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const profile = button.dataset.externalProfile;
+      const url = EXTERNAL_PROFILE_URLS[profile];
+      if (!url) return;
+
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+  });
+}
+
 // ==============================
 // Interactions
 // ==============================
@@ -700,6 +717,7 @@ function setupStickyHeader() {
 async function init() {
   await renderContent();
   bindForm();
+  bindExternalProfileLinks();
   bindGalleryToggle();
   bindReviewCarousel();
   setupStickyHeader();
