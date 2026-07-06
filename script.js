@@ -75,13 +75,25 @@ const INITIAL_VIDEO_COUNT = 2;
 const VIDEO_INCREMENT = 2;
 
 const SONGS = [
-  { artist: "성시경", title: "너의 모든 순간" },
-  { artist: "로이킴", title: "내게 사랑이 뭐냐고 물어본다면" },
+  {
+    artist: "성시경",
+    title: "너의 모든 순간",
+    url: "https://www.youtube.com/watch?v=dvF5I-faSH4",
+  },
+  {
+    artist: "로이킴",
+    title: "내게 사랑이 뭐냐고 물어본다면",
+    url: "https://www.youtube.com/watch?v=Mc6l0YKMErc",
+  },
   { artist: "로이킴", title: "달리 표현할 수 없어요" },
   { artist: "로이킴", title: "봄이와도" },
   { artist: "김동률", title: "감사" },
   { artist: "오반", title: "flower" },
-  { artist: "이무진", title: "청혼하지 않을 이유를 못 찾았어" },
+  {
+    artist: "이무진",
+    title: "청혼하지 않을 이유를 못 찾았어",
+    url: "https://www.youtube.com/watch?v=sXIrsFdJ_T8",
+  },
   { artist: "그냥", title: "우리 사랑은 필름 같았으면 해요" },
   { artist: "정승환", title: "마치 오늘처럼" },
 ];
@@ -180,14 +192,25 @@ function getYouTubeEmbedUrl(url) {
   return `https://www.youtube-nocookie.com/embed/${youtubeId}`;
 }
 
+function getYouTubeWatchUrl(url) {
+  const youtubeId = getYouTubeId(url);
+  if (!youtubeId) return "";
+  return `https://www.youtube.com/watch?v=${youtubeId}`;
+}
+
 function extractYouTubeUrls(value) {
-  const matches = String(value || "").match(/https?:\/\/[^\s"',<>]+/g) || [];
+  const matches = String(value || "").match(/https?:\/\/[^\s"',<>\])]+/g) || [];
   const seen = new Set();
   return matches.filter((url) => {
     if (!getYouTubeId(url) || seen.has(url)) return false;
     seen.add(url);
     return true;
   });
+}
+
+function getFirstYouTubeWatchUrl(value) {
+  const [url] = extractYouTubeUrls(value);
+  return getYouTubeWatchUrl(url);
 }
 
 function parseCsvRows(csv) {
@@ -293,14 +316,20 @@ async function getSongs() {
     const rows = removeHeaderRow(await fetchCsvRows(sheetUrl), [
       "artist",
       "title",
+      "url",
+      "link",
+      "youtube",
       "가수",
       "곡명",
       "노래",
+      "링크",
+      "유튜브",
     ]);
     const songs = rows
-      .map(([artist, title]) => ({
+      .map(([artist, title, url]) => ({
         artist: String(artist || "").trim(),
         title: String(title || "").trim(),
+        url: getFirstYouTubeWatchUrl(url),
       }))
       .filter((song) => song.artist && song.title);
     return songs.length ? songs : SONGS;
@@ -407,6 +436,13 @@ async function renderContent() {
         <span class="song-artist">${escapeHtml(song.artist)}</span>
         <span class="song-main">
           <strong>${escapeHtml(song.title)}</strong>
+        </span>
+        <span class="song-action">
+          ${
+            song.url
+              ? `<a class="song-link" href="${escapeHtml(song.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${song.artist} ${song.title} 유튜브로 미리 듣기`)}">미리 듣기</a>`
+              : ""
+          }
         </span>
       </li>
     `,
