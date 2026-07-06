@@ -1204,9 +1204,9 @@ textarea {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
   margin-top: 14px;
-  color: rgba(51, 35, 27, 0.56);
+  color: rgba(51, 35, 27, 0.58);
   font-size: 12px;
   line-height: 1.45;
   text-align: right;
@@ -1217,18 +1217,27 @@ textarea {
 }
 
 .external-profile-links a {
-  color: rgba(51, 35, 27, 0.72);
-  text-decoration: underline;
-  text-decoration-color: rgba(51, 35, 27, 0.24);
-  text-underline-offset: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  color: rgba(51, 35, 27, 0.78);
+  background: rgba(255, 253, 248, 0.54);
+  border: 1px solid rgba(51, 35, 27, 0.12);
+  border-radius: 999px;
+  font-weight: 500;
+  text-decoration: none;
   transition:
     color 180ms ease,
-    text-decoration-color 180ms ease;
+    background 180ms ease,
+    border-color 180ms ease;
 }
 
 .external-profile-links a:hover {
-  color: var(--gold-deep);
-  text-decoration-color: currentColor;
+  color: #160f0a;
+  background: rgba(189, 132, 60, 0.13);
+  border-color: rgba(189, 132, 60, 0.28);
 }
 
 .inquiry-form {

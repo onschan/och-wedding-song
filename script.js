@@ -371,12 +371,6 @@ function renderList(selector, items, template) {
 }
 
 async function renderContent() {
-  const [referenceVideos, songs, reviews] = await Promise.all([
-    getReferenceVideos(),
-    getSongs(),
-    getReviews(),
-  ]);
-
   renderList(
     "#trustGrid",
     TRUST_POINTS,
@@ -399,6 +393,12 @@ async function renderContent() {
       </li>
     `,
   );
+
+  const [referenceVideos, songs, reviews] = await Promise.all([
+    getReferenceVideos(),
+    getSongs(),
+    getReviews(),
+  ]);
 
   renderList(
     "#eventMediaGrid",
