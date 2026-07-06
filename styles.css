@@ -939,35 +939,35 @@ textarea {
 .song-action {
   display: flex;
   justify-content: flex-end;
-  min-width: 92px;
+  min-width: 54px;
 }
 
 .song-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 78px;
-  min-height: 32px;
-  padding: 7px 12px;
-  color: #160f0a;
-  background: #f5e6d1;
-  border: 1px solid rgba(189, 132, 60, 0.38);
+  width: 32px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: 0;
   border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
   white-space: nowrap;
   transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .song-link:hover {
-  color: #160f0a;
-  background: var(--gold);
-  border-color: var(--gold);
+  opacity: 0.82;
+}
+
+.song-link img {
+  display: block;
+  width: 32px;
+  height: auto;
 }
 
 .review-carousel {
@@ -1768,7 +1768,7 @@ textarea:focus {
   }
 
   .song-item {
-    grid-template-columns: minmax(68px, 0.28fr) minmax(0, 1fr) 76px;
+    grid-template-columns: minmax(68px, 0.28fr) minmax(0, 1fr) 48px;
     gap: 4px 12px;
     min-height: auto;
     padding: 13px 0;
@@ -1787,14 +1787,16 @@ textarea:focus {
   }
 
   .song-action {
-    min-width: 76px;
+    min-width: 48px;
   }
 
   .song-link {
-    min-width: 68px;
-    min-height: 28px;
-    padding: 5px 8px;
-    font-size: 11px;
+    width: 31px;
+    height: 23px;
+  }
+
+  .song-link img {
+    width: 31px;
   }
 
   .intro-text {

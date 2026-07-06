@@ -440,7 +440,7 @@ async function renderContent() {
         <span class="song-action">
           ${
             song.url
-              ? `<a class="song-link" href="${escapeHtml(song.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${song.artist} ${song.title} 유튜브로 미리 듣기`)}">미리 듣기</a>`
+              ? `<a class="song-link" href="${escapeHtml(song.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${song.artist} ${song.title} 유튜브로 듣기`)}"><img src="assets/youtube-logo.png" alt="" loading="lazy" /></a>`
               : ""
           }
         </span>
