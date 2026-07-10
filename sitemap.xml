@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+>
   <url>
     <loc>https://och.onschan.me/</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://och.onschan.me/assets/main-hero.webp</image:loc>
+      <image:title>오창현 축가</image:title>
+      <image:caption>결혼식 남자 축가 섭외와 축가 문의를 위한 오창현 축가 대표 이미지</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://och.onschan.me/assets/review-proof-2.png</image:loc>
+      <image:title>오창현 축가 후기</image:title>
+      <image:caption>축가 섭외 후 고객님들이 남긴 실제 예식 후기</image:caption>
+    </image:image>
   </url>
 </urlset>
