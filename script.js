@@ -60,18 +60,54 @@ const PROCESS_STEPS = [
 ];
 
 const EVENT_PHOTOS = [
-  "assets/portfolio-4.webp",
-  "assets/portfolio-5.webp",
-  "assets/portfolio-6.webp",
-  "assets/portfolio-7.webp",
-  "assets/portfolio-8.webp",
-  "assets/portfolio-9.webp",
-  "assets/portfolio-10.webp",
-  "assets/portfolio-11.webp",
-  "assets/portfolio-13.webp",
-  "assets/portfolio-1.webp",
-  "assets/portfolio-3.webp",
-  "assets/portfolio-12.webp",
+  {
+    src: "assets/portfolio-4.webp",
+    alt: "실내 예식장 꽃 아치 무대에서 신랑 신부 옆에 서서 축가를 부르는 남자 축가 보컬 오창현",
+  },
+  {
+    src: "assets/portfolio-5.webp",
+    alt: "결혼식 축가 중 흰 장미를 단 마이크를 잡고 노래하는 남자 축가 가수 오창현",
+  },
+  {
+    src: "assets/portfolio-6.webp",
+    alt: "하객석 앞에서 흰 셔츠 차림으로 결혼식 축가를 부르는 남자 축가 보컬 오창현",
+  },
+  {
+    src: "assets/portfolio-7.webp",
+    alt: "예식장 입구에서 검정 정장 차림으로 축가를 시작하는 남자 축가 보컬 오창현",
+  },
+  {
+    src: "assets/portfolio-8.webp",
+    alt: "야외 가든 웨딩 잔디밭에서 신랑 신부를 마주 보며 축가를 부르는 남자 축가 가수 오창현",
+  },
+  {
+    src: "assets/portfolio-9.webp",
+    alt: "흰 꽃으로 꾸민 야외 예식 무대에서 축가를 부르는 남자 축가 보컬의 뒷모습",
+  },
+  {
+    src: "assets/portfolio-10.webp",
+    alt: "꽃 장식과 샹들리에가 있는 웨딩홀 하객 사이에서 축가를 부르는 남자 축가 가수 오창현",
+  },
+  {
+    src: "assets/portfolio-11.webp",
+    alt: "웨딩홀 단상 앞에서 신랑 신부를 향해 축가를 부르는 검정 정장 차림의 남자 축가 보컬",
+  },
+  {
+    src: "assets/portfolio-13.webp",
+    alt: "신부 뒤편에서 흰 장미를 단 마이크로 축가를 부르는 남자 축가 보컬 오창현",
+  },
+  {
+    src: "assets/portfolio-1.webp",
+    alt: "군복 차림 신랑과 신부 앞에서 결혼식 축가를 부르는 남자 축가 보컬 오창현",
+  },
+  {
+    src: "assets/portfolio-3.webp",
+    alt: "연회장 무대에서 하객 테이블을 향해 축가를 부르는 남자 축가 가수 오창현",
+  },
+  {
+    src: "assets/portfolio-12.webp",
+    alt: "회색 정장 차림으로 마이크를 잡고 결혼식 축가를 부르는 남자 축가 보컬 오창현",
+  },
 ];
 
 const INITIAL_GALLERY_COUNT = 4;
@@ -271,7 +307,7 @@ function removeHeaderRow(rows, headers) {
 
 function createReferenceVideo(url, index) {
   return {
-    title: `축가 라이브 ${String(index + 1).padStart(2, "0")}`,
+    title: `결혼식 축가 라이브 영상 ${String(index + 1).padStart(2, "0")} - 남자 축가 보컬 오창현`,
     song: "실제 라이브",
     body: "",
     videoUrl: url,
@@ -410,7 +446,7 @@ async function renderContent() {
     EVENT_PHOTOS,
     (image, index) => `
       <figure class="photo-card fade-target ${index >= INITIAL_GALLERY_COUNT ? "is-collapsed" : ""}">
-        <img src="${escapeHtml(image)}" alt="" loading="${index < 4 ? "eager" : "lazy"}" />
+        <img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" loading="${index < 4 ? "eager" : "lazy"}" />
       </figure>
     `,
   );
