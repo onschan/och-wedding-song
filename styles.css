@@ -970,6 +970,11 @@ textarea {
   height: auto;
 }
 
+/* 인스타그램 글리프는 정사각형이라 가로형 유튜브 로고보다 작게 맞춥니다. */
+.song-link.is-instagram img {
+  width: 23px;
+}
+
 .review-carousel {
   position: relative;
   min-width: 0;
@@ -1808,6 +1813,10 @@ textarea:focus {
 
   .song-link img {
     width: 31px;
+  }
+
+  .song-link.is-instagram img {
+    width: 22px;
   }
 
   .intro-text {

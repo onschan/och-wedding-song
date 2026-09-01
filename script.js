@@ -254,6 +254,45 @@ function getFirstYouTubeWatchUrl(value) {
   return getYouTubeWatchUrl(url);
 }
 
+function getFirstInstagramUrl(value) {
+  const matches = String(value || "").match(/https?:\/\/[^\s"',<>\])]+/g) || [];
+  for (const url of matches) {
+    try {
+      if (new URL(url).hostname.includes("instagram.com")) return url;
+    } catch (error) {
+      continue;
+    }
+  }
+  return "";
+}
+
+// 시트 링크 칸에 유튜브와 인스타그램 주소를 모두 넣을 수 있게 종류를 구분합니다.
+function getSongLink(value) {
+  const youtubeUrl = getFirstYouTubeWatchUrl(value);
+  if (youtubeUrl) return { type: "youtube", url: youtubeUrl };
+
+  const instagramUrl = getFirstInstagramUrl(value);
+  if (instagramUrl) return { type: "instagram", url: instagramUrl };
+
+  return null;
+}
+
+function withSongLinks(songs) {
+  return songs.map((song) => ({ ...song, link: getSongLink(song.url) }));
+}
+
+function renderSongLink(song) {
+  if (!song.link) return "";
+
+  const isInstagram = song.link.type === "instagram";
+  const icon = isInstagram
+    ? "assets/instagram-logo.svg"
+    : "assets/youtube-logo.png";
+  const action = isInstagram ? "인스타그램에서 보기" : "유튜브로 듣기";
+
+  return `<a class="song-link${isInstagram ? " is-instagram" : ""}" href="${escapeHtml(song.link.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${song.artist} ${song.title} ${action}`)}"><img src="${icon}" alt="" loading="lazy" /></a>`;
+}
+
 function parseCsvRows(csv) {
   const rows = [];
   let row = [];
@@ -351,7 +390,7 @@ async function getReferenceVideos() {
 
 async function getSongs() {
   const sheetUrl = String(window.GOOGLE_SHEET_SONG_CSV_URL || "").trim();
-  if (!sheetUrl) return SONGS;
+  if (!sheetUrl) return withSongLinks(SONGS);
 
   try {
     const rows = removeHeaderRow(await fetchCsvRows(sheetUrl), [
@@ -370,13 +409,13 @@ async function getSongs() {
       .map(([artist, title, url]) => ({
         artist: String(artist || "").trim(),
         title: String(title || "").trim(),
-        url: getFirstYouTubeWatchUrl(url),
+        link: getSongLink(url),
       }))
       .filter((song) => song.artist && song.title);
-    return songs.length ? songs : SONGS;
+    return songs.length ? songs : withSongLinks(SONGS);
   } catch (error) {
     console.warn("Google Sheet 추천 축가 목록을 불러오지 못했습니다.", error);
-    return SONGS;
+    return withSongLinks(SONGS);
   }
 }
 
@@ -478,13 +517,7 @@ async function renderContent() {
         <span class="song-main">
           <strong>${escapeHtml(song.title)}</strong>
         </span>
-        <span class="song-action">
-          ${
-            song.url
-              ? `<a class="song-link" href="${escapeHtml(song.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${song.artist} ${song.title} 유튜브로 듣기`)}"><img src="assets/youtube-logo.png" alt="" loading="lazy" /></a>`
-              : ""
-          }
-        </span>
+        <span class="song-action">${renderSongLink(song)}</span>
       </li>
     `,
   );
