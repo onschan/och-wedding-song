@@ -40,10 +40,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:site_name" content="오창현 축가" />
+    <!-- 검색 썸네일과 공유 미리보기 수집기가 WebP를 읽지 못하는 경우가 있어 JPG로 노출합니다. -->
     <meta
       property="og:image"
-      content="https://och.onschan.me/assets/main-hero.webp"
+      content="https://och.onschan.me/assets/main-hero.jpg"
     />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1310" />
+    <meta property="og:image:height" content="980" />
     <meta
       property="og:image:alt"
       content="결혼식장에서 축가를 부르는 보컬 오창현"
@@ -60,7 +64,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://och.onschan.me/assets/main-hero.webp"
+      content="https://och.onschan.me/assets/main-hero.jpg"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -120,7 +124,15 @@
             },
             "primaryImageOfPage": {
               "@type": "ImageObject",
-              "url": "https://och.onschan.me/assets/main-hero.webp"
+              "@id": "https://och.onschan.me/#primaryimage",
+              "url": "https://och.onschan.me/assets/main-hero.jpg",
+              "contentUrl": "https://och.onschan.me/assets/main-hero.jpg",
+              "width": 1310,
+              "height": 980,
+              "caption": "결혼식장에서 축가를 부르는 남자 축가 보컬 오창현"
+            },
+            "image": {
+              "@id": "https://och.onschan.me/#primaryimage"
             }
           },
           {
@@ -148,7 +160,7 @@
             "jobTitle": "축가 전문 보컬",
             "description": "신랑 신부님의 새로운 시작을 진심으로 축복하며 결혼식 축가를 진행하는 남자 축가 보컬입니다.",
             "url": "https://och.onschan.me/",
-            "image": "https://och.onschan.me/assets/main-hero.webp",
+            "image": "https://och.onschan.me/assets/main-hero.jpg",
             "email": "mailto:och0615@naver.com",
             "sameAs": [
               "https://www.instagram.com/_din.oh",
@@ -174,7 +186,7 @@
             "@id": "https://och.onschan.me/#service",
             "name": "오창현 축가",
             "url": "https://och.onschan.me/",
-            "image": "https://och.onschan.me/assets/main-hero.webp",
+            "image": "https://och.onschan.me/assets/main-hero.jpg",
             "description": "축가 섭외, 축가 문의, 축가 예약 상담을 통해 결혼식과 예식 본식에 어울리는 남자 솔로 축가를 준비합니다.",
             "email": "mailto:och0615@naver.com",
             "sameAs": [
