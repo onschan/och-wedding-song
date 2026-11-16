@@ -618,6 +618,7 @@ function bindForm() {
 
   mailLink.addEventListener("click", () => {
     updateMailLink();
+    trackEvent("inquiry_submit", { method: "email_form" });
     setMessage("메일 앱을 여는 중입니다.");
 
     window.setTimeout(() => {
@@ -631,6 +632,57 @@ function bindForm() {
   });
 }
 
+// 측정 ID가 비어 있으면 스크립트를 부르지 않아 불필요한 요청이 생기지 않습니다.
+function initAnalytics() {
+  const measurementId = String(window.GA_MEASUREMENT_ID || "").trim();
+  if (!measurementId) return;
+
+  const loader = document.createElement("script");
+  loader.async = true;
+  loader.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+  document.head.appendChild(loader);
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() {
+    window.dataLayer.push(arguments);
+  };
+  window.gtag("js", new Date());
+  window.gtag("config", measurementId);
+}
+
+// 문의 내용에는 개인정보가 들어가므로 어떤 경로로 눌렀는지만 보냅니다.
+function trackEvent(name, params) {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", name, params || {});
+}
+
+function bindContactTracking() {
+  document.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+    if (link.id === "mailSubmit") return;
+    link.addEventListener("click", () => {
+      trackEvent("contact_click", { method: "email" });
+    });
+  });
+
+  document.querySelectorAll('a[href*="instagram.com"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      trackEvent("contact_click", { method: "instagram" });
+    });
+  });
+
+  document.querySelectorAll('[title="카카오톡"]').forEach((node) => {
+    node.addEventListener("click", () => {
+      trackEvent("contact_click", { method: "kakaotalk" });
+    });
+  });
+
+  document.querySelectorAll('a[href="#contact"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      trackEvent("contact_cta_click");
+    });
+  });
+}
+
 function bindExternalProfileLinks() {
   document.querySelectorAll("[data-external-profile]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -638,6 +690,7 @@ function bindExternalProfileLinks() {
       const url = EXTERNAL_PROFILE_URLS[profile];
       if (!url) return;
 
+      trackEvent("external_profile_click", { profile });
       window.open(url, "_blank", "noopener,noreferrer");
     });
   });
@@ -788,8 +841,10 @@ function setupStickyHeader() {
 }
 
 async function init() {
+  initAnalytics();
   await renderContent();
   bindForm();
+  bindContactTracking();
   bindExternalProfileLinks();
   bindGalleryToggle();
   bindReviewCarousel();
